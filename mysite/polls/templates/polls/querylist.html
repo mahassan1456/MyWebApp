@@ -1,0 +1,19 @@
+{% extends "polls/base.html" %}
+{% load polls_extras %}
+{% block content %}
+    {% if search_list %}
+    <h2>{{ search_list.0 | to_class_name }}'s Results</h2>
+    <ul>
+    {% for item in search_list %}
+        {% if  item|to_class_name == 'Question' %}
+            <li> <a href="{% url 'polls:detail' item.id %}">{{ item.question_text }}</a></li>
+        {% else %}
+            <li><a href="{% url 'polls:view_profile' item.id %}">{{ item.username }}</a></li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+    {% else %}
+    <h2>No Results Found</h2>
+    {% endif %}
+    
+{% endblock %}

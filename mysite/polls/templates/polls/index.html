@@ -1,0 +1,50 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+<button style="right: 100px;margin:5px;border-radius:14px;"><a style="text-decoration:none;" href="{% url 'polls:add_question'  %}">Start New Poll</a></button>
+    {% if latest_question_list %}
+<div class="container text-center border border-4 border-secondary rounded-pill my-5 py-3">
+    <h2 style="font-size:60px;">Questions by other Users</h2>
+    <ul style="list-style-type:none;">
+    {% for question in latest_question_list %}
+        {% if question.user_p.id != request.user.id %}
+        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}
+
+        </a>{% if question.user_p.username %} posted by <a href="{% url 'polls:view_profile' question.user_p.id %}">{{ question.user_p.username }} </a> {% else %} Unknown {% endif %}</li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+</div>
+<div class="container text-center border border-4 border-primary rounded-pill my-5 py-3">
+    <h2 style="font-size:60px;">Questions by You!</h2>
+    <ul style="list-style-type:none;">
+        {% for question in latest_question_list %}
+            {% if question.user_p.id == request.user.id %}
+            <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+</div>
+    {% else %}
+    <p>No polls are available.</p>
+    {% endif %}
+<div class="container text-center border border-4 border-warning rounded-pill my-5 py-3">
+    <h2 style="font-size:60px;">You Voted for... !</h2>
+    <ul style="list-style-type:none;">
+        {% for choice in request.user.choice_set.all %}
+            <li>Answered {{ choice.choice_text }} for {{ choice.question.question_text }} <a href="{% url 'polls:chart' choice.question.id %}">View Results</a> </li> 
+            <h5>Other Users that answered Similar</h5>
+            <ol style="list-style-type:none;">
+                {% for user in Users %}
+                 {% for choiceN in user.choice_set.all %}
+                 {% if choiceN.question.id == choice.question.id and request.user.id != user.id %}
+                <li><a href="{% url 'polls:view_profile' user.id %}">{{ user.username }} </a> Answered {{ choiceN.choice_text }} </li>
+                 {% endif %}
+                 {% endfor %}
+                {% endfor %}
+            </ol>
+        {% endfor %}
+        </ul>
+</div>
+{% endblock %}
+    

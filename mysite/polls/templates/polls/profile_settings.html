@@ -1,0 +1,21 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+
+<form action="" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <label for="canview">Can User who are not friends view your profile?</label>
+        <br>
+        <input type="radio" id="canview" name="answer" value="Yes" {% if request.user.profile.canView == 'Yes' %} checked {% endif %}>Yes<br>
+        <input type="radio" id="canview" name="answer" value="No" {% if request.user.profile.canView == 'No' %} checked {% endif %}>No<br>
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+
+</form>
+
+
+
+
+{% endblock %}

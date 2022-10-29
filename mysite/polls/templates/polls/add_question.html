@@ -1,0 +1,70 @@
+{% extends 'polls/base.html' %}
+
+{% block content %} 
+<div class="container text-center">
+<form action="" method="post">
+    {% csrf_token %}
+    <div class="form-group m-2 p-3">
+      <label for="exampleFormControlInput1" class="pb-2">Username</label>
+      <input style="border-radius:14px" type="email" class="form-control" id="exampleFormControlInput1" placeholder="{{ request.user.email }}">
+    </div>
+    <div class="form-group m-2 p-3">
+      <label for="exampleFormControlTextarea1" class="pb-2">Question</label>
+      <textarea style="border-radius: 15px;" name="question" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    </div>
+    <div class="form-group m-2 p-3">
+      <label for="exampleFormControlTextarea1" class="pb-2">Choices</label>
+      <ol id="choiceselect">
+      </ol>
+      <button style="border-radius:12px" type ="button" onclick="addItem()">Add Choice</button>
+      <button style="border-radius:12px" type ="button" onclick="removeElement()">Remove Choice</button>
+    </div>
+   
+    <input type="submit" class="btn btn-primary m-1" value="Submit" class="mt-3">
+
+  </form>
+</div>
+
+<script type="text/javascript">
+   function addItem() {
+        li = document.createElement('input')
+        ol = document.getElementById("choiceselect")
+        lastChild = ol.getElementsByTagName("input")
+        if (lastChild.length === 0) {
+          li.setAttribute("name", "choice1")
+          ol.appendChild(li)
+        } else {
+          lastChild = lastChild[lastChild.length - 1]
+          chnum = lastChild.getAttribute("name")
+          chnum = chnum.slice(6)
+          chnum = parseInt(chnum) + 1
+          chnum = "choice" + chnum
+          li.setAttribute("name", chnum)
+          ol.appendChild(li)
+        }
+        ol.appendChild(document.createElement("br"))
+        console.log('added')
+        
+    }
+    function removeElement() {
+      ol = document.getElementById("choiceselect").lastElementChild.remove()
+    }
+</script>
+
+
+
+{% endblock %}
+
+<div class="form-group m-2 p-3">
+  <label for="exampleFormControlTextarea1" class="pb-2">Choices (delimit by newline)</label>
+  <textarea name="choices" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+  
+</div>
+
+# Previously had a text box that inputted the answer choices by delimiting a new line for each choice.
+This is the html code.
+
+<div class="form-group m-2 p-3">
+  <label for="exampleFormControlTextarea1" class="pb-2">Choices (delimit by newline)</label>
+  <textarea name="choices" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+</div>

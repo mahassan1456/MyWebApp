@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    platform: linux/amd64
+    image: mysql:5.7
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ports:
+       - "3306"
+    environment:
+       MYSQL_DATABASE: 'Dj6'
+       MYSQL_ROOT_PASSWORD: 'p4ssw0rd'
+  web:
+    build: .
+    command: bash -c 'while !</dev/tcp/db/3306; do sleep 1; done; python mysite/manage.py runserver 0.0.0.0:8000'
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    

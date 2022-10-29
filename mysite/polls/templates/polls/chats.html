@@ -1,0 +1,21 @@
+{% extends 'polls/base.html' %}
+
+
+{% block content %}
+{% if request.user.user.chats.all %}
+{% for chat in chats %}
+<ul>
+    <li>Conversation with <a href="{% url 'polls:dm' chat.0.id %}">{{ chat.0.username }}  </a> </li>
+    {% if chat.1 %}
+    <span>New Messages!!</span>
+    <button type="button"><a href="{% url 'polls:clear_notifi' chat.0.id %}">Clear</a></button>
+    {% endif %}
+</ul>
+{% endfor %}
+{% else %}
+<h1>You Currently Have no Open Chats</h1>
+{% endif %}
+<button type="button"> <a href="{% url 'polls:clear_chat_notify' %}"> Clear All</a></button>
+{% endblock %}
+<!-- <li>Conversation with <a href="{% url 'polls:dm' chat.id %}">{{ chat.username }} </a> </li>
+<li>Conversation with <a href="{% url 'polls:dm' chat.0.id %}">{{ chat.username }} </a> </li> -->

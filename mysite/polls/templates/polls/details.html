@@ -1,0 +1,25 @@
+{% extends 'polls/base.html' %}
+
+
+
+{% block content %}
+<div class="container-fluid">
+<form action="{% url 'polls:vote' question.id  %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>{{ question.user_p.username }} asked <br> {{ question.question_text }}</h1></legend>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        {% for choice in question.choice_set.all %}
+            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+            <label class="form-label" for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+        {% endfor %}
+    </fieldset>
+    <input name="vote" class=" m-1 btn btn-primary" type="submit" value="Vote">
+    {% if question in request.user.question_set.all %}
+    <input class="m-1 btn btn-primary" name="edit" type="submit" value="Edit">
+    <input class="m-1 btn btn-primary" name="delete" type="submit" value="Delete">
+    {% endif %}
+    </form>
+</form>
+</div>
+{% endblock %}

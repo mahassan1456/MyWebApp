@@ -1,0 +1,43 @@
+{% extends 'polls/base.html' %}
+
+
+{% block content %}
+
+<div class="card m-2">
+
+    <div class="card-body mt-2">
+        <h5 class="card-title"> {{ article.title }}</h5>
+        <img class="card-img-top my-3" src="{{ MEDIA_URL }}{{article.image}}" height="250" width="500" alt="Card image cap">
+        <h6 class="card-subtitle mb-2 text-muted"> {{ article.author.username }} on {{ article.created }}</h6>
+        <p class="card-text">{{ article.content }}</p>
+        {% if request.user == article.author %}
+        <button class="btn btn-primary"><a style="text-decoration: None;" class="text-white" href="{% url 'blog:delete' article.id %}">Delete Article</a></button>
+        {% endif %}
+    </div>
+        {% if article.reply_set.all %}
+        {% for comment in article.reply_set.all %}
+            <div class="card-body mt-2">
+                <h5 class="card-title"></h5>
+                <h6 class="card-subtitle mb-2 text-muted"> {{ comment.madeby }} on {{ comment.created }}</h6>
+                <p class="card-text">{{ comment.content }}</p>
+            </div>
+
+        {% endfor %}
+        {% endif %}
+</div>
+    <div class="m-2 mt-3">
+        <form action="{% url 'blog:post_comment' article.id %}" method="post">
+            {% csrf_token %}
+            
+            <textarea name="make_post" class="border" id="madeby" cols="100" rows="5"></textarea>
+            <br>
+            <input class="mt-2 btn btn-primary" class="btn btn-primary" type="submit" value="Comment">
+        </form>
+    </div>
+        
+
+    
+
+
+
+{% endblock %}

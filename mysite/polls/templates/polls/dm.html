@@ -1,0 +1,321 @@
+{% extends 'polls/base.html' %}
+
+{% block styles %}
+
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+ <style>
+
+body {
+    margin: none;
+    background-color: aliceblue;
+}
+
+/* Contains the main parent container */
+#parent_cont {
+
+}
+
+/* Parent Container housing Grid Layour for three smaller containers 1) Active Chats Pane
+2) ChatBox 3) Friends Pane (where users can start new chats with existing friends) */
+#flexer {
+    /* display: flex;
+    justify-content: space-between; */
+    display: grid;
+    grid-template-columns: 24% 50% 24% auto;
+    grid-template-rows: 540px 200px;
+    grid-template-areas:
+    "message chat_box friendspane ."
+    "message lastpane friendspane ."
+    ;
+    padding: 10px;
+    /* overflow: scroll; */
+    position: relative;
+   
+    
+    
+    
+    
+}
+
+#chatlabel {
+    
+    text-align: center;
+    text-shadow: 2px 2px rgb(156, 156, 156);
+    font-size: 40px;
+    color: rgb(42, 42, 42);
+    margin: 0px;
+    border-style: double;
+    font-family: 'Bebas Neue', cursive;;
+    vertical-align: text-bottom;
+}
+
+/* Represents the Active Chats Pane(1st Grid Column) inside Parent Container*/
+
+#messagepane {
+    grid-area: message;
+    margin-right: 5px;
+    border-radius: 10px;
+    overflow: scroll;
+}
+
+#unimessage {
+    text-decoration: none;
+    
+}
+
+.dms {
+    border-bottom: 5px groove rgb(155, 155, 155);
+    padding-bottom: 10px;
+    text-decoration: none;
+    color: rgb(42, 9, 68);
+}
+/* CHATBOX */
+/* This represents the container for the Chatbox(2nd Grid Column) housing the chat dialogue. */
+
+#t1 {
+    /* float: right; */
+    grid-area: chat_box;
+    margin-right: 10px;
+    border-style: double;
+    height: 800px;
+    border-radius: 14px;
+    position: relative;
+    overflow: scroll;
+    height: 540px;
+    background-color: rgb(0, 0, 0);
+}
+
+#trd {
+    overflow: scroll;
+    margin-bottom: 10px;
+}
+
+ #Chatbox {
+    
+    border-style:solid;
+    background-color: rgb(63, 167, 150);
+    margin-right: 15px;
+    margin:3px;
+    
+    border-radius: 14px;
+    padding: 15px;
+    padding-right: 10px;
+    height: 98%;
+    
+ }
+ .youbackground {
+    background-color: rgb(161, 0, 53);
+    position: relative;
+    width: 50%;
+    border-radius: 10px;
+    left: 300px;
+    
+ }
+
+ .tobackground {
+    background-color: rgb(254, 194, 96);
+    display: block;
+    position: relative;
+    border-radius: 10px;
+    width: 50%;
+   
+
+ }
+
+
+
+ /* This is the beginning of the Friends Pane(3rd Grid Column) on the Right Side of the Window */
+
+ #friendspane {
+    grid-area: friendspane;
+    border-style: solid;
+    height: 650px; 
+    border-radius: 10px;
+    overflow: scroll;
+}
+
+#lastpane {
+    grid-area: lastpane;
+    z-index: 100;
+    margin-top: 15px;
+}
+
+#friendsflexbox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.friendsflex {
+    margin-left: 15px;
+    margin-top: 15px;
+    position: relative;
+}
+
+.friendlabel {
+    left: 0px;
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+}
+
+#t2 {
+
+}
+
+
+</style>
+<script>
+    // Declare All Global Variables Which will Exist On Page 
+</script>
+{% endblock styles %}
+{% block content %}
+<script>let vari = "Hello World"; </script>
+<div id="parent_cont" style="border-style:dotted;">
+    <p id="chatlabel">{{friend.first_name|title}} {{friend.last_name|title}}</p>
+    <div id='flexer' style="margin-top:2px; padding:20px 0px 0px 20px;">
+        <div id="messagepane">
+            <div>
+                <p style="border-style:dotted;">ACTIVE CHATS</p>
+            </div>
+            {% for chat in request.user.user.chats.all %}
+            <div>
+                <a class='unimessage' href="{% url 'polls:dm' chat.id %}" style="text-decoration:none;">
+                    <p class="dms">{{chat.first_name|title}} {{chat.last_name|title}} 09:05AM 12/30 {{chat.first_name|title}} SAID ...</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <div id="t1">
+            <div id="trd">
+                <div id="Chatbox">
+                    {% if request.user in friend.user.friends.all or request.user == friend %}
+                        <div id="messages">
+                            {% if yes != 0 %} 
+                                {% for mess in dm %}
+                                    {% if request.user.username == mess.mb.username %}
+                                        <div>
+                                            <p class="tobackground">
+                                                <strong>{{mess.message}}--You</strong>
+                                            </p>
+                                        </div>
+                                        {% else %}
+                                        <div>
+                                            <p class="youbackground">
+                                                <strong>{{mess.message}}--dd{{mess.mb.username}}</strong>
+                                            </p>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <script>
+                                    document.getElementById("chatlabel").innerHTML = "Start a Conversation with {{friend.get_full_name}}";
+                                </script>
+                            {% endif %}
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div id="lastpane">
+            <div style="display:relative;">
+                <span>
+                    <form style="display:relative;" action="{% url 'polls:dm' friend.id %}" method="post" >
+                        {% csrf_token %}
+                            <textarea style="border-radius: 13px;vertical-align: bottom;" name="message" id="comment" cols="89" rows="5"></textarea>
+                            <input  class="btn btn-primary" style="color:whitesmoke; border-radius: 10px;background-color: rgb(63, 167, 150);height:125px;vertical-align:bottom;" type="submit" value="SEND" class="sub" data-catid={{ friend.id }}>
+                    </form>
+                </span>
+            </div>
+        </div>
+        <div id="friendspane">
+            <div>
+                <p>FRIENDS</p>
+            </div>
+            <div id="friendsflexbox">
+                {% for friend in request.user.user.friends.all %} 
+                <div class="friendsflex" style="border-style:dotted;">
+                    <!-- <p>{{request.user.profile.picture}}</p> -->
+                    {% if friend.profile.picture != "" %}
+                    <div style="display:flex;justify-content: center;">
+                        <div style="border-style:solid;">
+                            <a style="text-decoration:none;" href="{% url 'polls:dm' friend.id %}">
+                                <img class="friendlabel" style="display:block;margin-left: auto;margin-right: auto;" src="{{MEDIA_URL}}{{friend.profile.picture}}" alt="Image Not Available" width="50" height="50"> 
+                                <p style="color:rgb(42, 9, 68);" >{{friend.first_name}} {{friend.last_name}}</p>
+                            </a>
+                        </div> 
+                    </div>
+                    {% else %}
+                    <div style="display:flex;justify-content: center;">
+                        <div>
+                            <a style="text-decoration:none;" href="{% url 'polls:dm' friend.id %}">
+                                <img class="friendlabel" style="display:block;margin-left: auto;margin-right:auto;" src="{{MEDIA_URL}}uploads/generic_picture.png" alt="Image Not Available" width="50" height="50">
+                                <p style="color:rgb(42, 9, 68);">{{friend.first_name}} {{friend.last_name}}</p>
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <script type="text/javascript"> 
+    $('.sub').click(function(){ 
+    var id; 
+    id = $(this).attr("data-catid"); 
+    $.ajax( 
+    { 
+        type:"GET", 
+        url: "dm", 
+        data:{ 
+                 id1: id 
+    }, 
+    success: function( data ) 
+    { 
+        alert('message received')
+    </script> -->
+<script>
+    console.log(vari)
+    let intervalID = null;
+    $(document).ready( function () {
+        intervalID = setInterval(function() {
+        $.ajax({
+            type:'GET',
+            url: "{% url 'polls:updatechat' request.user.id friend.id %}",
+            success: function(response) {
+                $("#messages").empty();
+                for (var key in response.chats) {
+                    if (response.current_u == response.chats[key].usermade) {
+                        var temp = "<p class='tobackground'>"+response.chats[key].message+"--You"+"</p>";
+                    } else {
+                        var temp = "<p class='youbackground'>"+response.chats[key].message+"--"+response.chats[key].usermade+"</p>";
+                    }
+                    console.log(Date.now());
+                    $("#messages").append(temp);
+
+                }
+            },
+            error: function(response) {
+                console.log("Error Getting Data")
+            }
+        });
+        }, 5000);
+
+    });
+    function SwitchChatBox() {
+
+    }
+</script>
+
+{% else %}
+
+<h1>You Must Be Friends with {{ friend.username }}</h1>
+
+{% endif %}
+{% endblock %}

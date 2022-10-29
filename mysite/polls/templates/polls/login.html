@@ -1,0 +1,125 @@
+{% extends 'polls/base.html' %}
+
+{% block styles %}
+
+{{block.super}}
+
+<style>
+    body {
+        
+    }
+    .inpbox {
+        border-style: thick;
+        border-color:rgb(254, 194, 96);
+        border-radius: 10px;
+        width: 30%;
+    }
+
+    label {
+
+    }
+
+    #signinbutton {
+        border-radius: 10px;
+        border-style: solid;
+        font-size: 25px;
+        font-family: 'Yanone Kaffeesatz', sans-serif;
+        
+    }
+    #logincont {
+        text-align:center;
+        padding-top: 100px;
+    }
+    .gimmespace {
+        margin-bottom: 15px;
+    }
+    .inpboxes {
+       border-radius: 12px;
+       border-color: rgb(254, 194, 96);
+       border-style: solid;
+       border-width: medium;
+    }
+
+    .l1 {
+        font-family: 'Yanone Kaffeesatz', sans-serif;
+        color: rgb(63, 167, 150);
+        font-size: 22px;
+        
+    }
+</style>
+
+{% endblock styles %}
+
+{% comment %}
+{% block content %}
+
+  <div>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div>
+            <div></div>
+            <div>
+            <label for="inputEmail">Email</label>
+            <input type="text" name="username" class="form-control inpbox" id="inputEmail" placeholder="Email" required>
+            </div>
+            <div></div>
+        </div>
+        <div>
+            <div></div>
+            <div >
+            <label for="inputPassword">Password</label>
+            <input class="inpbox" type="password" name="password" id="inputPassword" placeholder="Password" required>
+            </div>
+            <div></div>
+        </div>
+        <div>
+            <div></div>
+            <div>
+                <div>
+                    <input type="checkbox" id="checkRemember">
+                    <label for="checkRemember">Remember me</label>
+                </div>
+            </div>
+            <div></div>
+        </div>
+        <div>
+        <div></div>
+        <div>
+            <button style="background-color: rgb(63, 167, 150);" type="submit" class="btn btn-primary">Sign in</button>
+        </div>
+        <div></div>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}
+
+{% endcomment %}
+
+{% block content %}
+<div id="logincont">
+    <form action="" method="post">
+        {% csrf_token %}
+        <strong>
+            <label class="l1 gimmespace" style="width:100%;" for="inputEmail">EMAIL</label>
+        </strong>
+        <div>
+            <input class="gimmespace inpboxes" aria-rowspan="" type="text" name="username" class="inpbox" id="inputEmail" placeholder="Email" required>
+        </div>
+        <strong>
+            <label class="l1 gimmespace" style="width:100%;" for="inputPassword">PASSWORD</label>
+        </strong>
+        <div>
+            <input class="gimmespace inpboxes" type="password" name="password" id="inputPassword" placeholder="Password" required>
+        </div>
+        <div>
+            <input type="checkbox" id="checkRemember">
+            <em>
+                <label for="checkRemember">Remember me</label>
+            </em>
+            <button id="signinbutton" style="background-color: rgb(63, 167, 150);color: whitesmoke;" type="submit">Sign in</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

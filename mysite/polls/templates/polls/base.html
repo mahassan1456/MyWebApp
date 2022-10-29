@@ -1,0 +1,225 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abel&family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Trispace:wght@500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@500&display=swap" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    {% block styles %} 
+    <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}"> 
+    {% endblock styles %}
+    <style>
+        h1, h2, p, span  {
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+        body {
+            background-color: aliceblue;
+        }
+        .nav{
+            background-color: rgb(42, 9, 68);
+            padding: 8px;
+        }
+        .nav-link {
+            color: rgb(63, 167, 150);
+            font-family: 'Trispace', sans-serif;
+            
+            
+        }
+        #searchbutton {
+            background-color: rgb(63, 167, 150);
+        }
+    </style> 
+    <title>Document</title>
+</head>
+<body>
+    <div>
+    <nav class="nav">
+        {% comment %}
+        <a class="nav-link" href="{% url 'polls:view_profile' request.id %}">Home</a>
+        {% endcomment %}
+
+        {% if request.user.is_authenticated %}
+            {% if request.user.notification.comment_flag %}
+                <a class="nav-link" id="profile_notif" href="{% url 'polls:view_profile' request.user.id %}">PROFILE<i class='fa-solid fa-envelope' id='badge'></i></a>
+            {% else %}
+                <a class="nav-link" id="profile_notif" href="{% url 'polls:view_profile' request.user.id %}">PROFILE</a>
+            {% endif %}
+        <a class="nav-link" href="{% url 'blog:all_posts'  %}">ARTICLES</a>
+        <a class="nav-link active" aria-current="page" href="{% url 'polls:index' %}">POLLS</a>
+        {% if request.user.notification.request_flag %}
+            <a class="nav-link" id="friend_notify" href="{% url 'polls:view_requests' %}">FRIENDS<i class='fa-solid fa-envelope' id='badge'></i></a>
+        {% else %}
+            <a class="nav-link" id="friend_notify" href="{% url 'polls:view_requests' %}">Friends</a>
+        {% endif %}
+        {% if request.user.notification.chat_flag %}
+            <a class="nav-link" id="chatnotify" href="{% url 'polls:chats'  %}">Chats<i class='fa-solid fa-envelope' id='badge'></i></a>
+        {% else %}
+            <a class="nav-link" id="chatnotify" href="{% url 'polls:chats'  %}">Chats</a>
+        {% endif %}
+        <a class="nav-link" href="{% url 'polls:logout_user'  %}">Log Out</a>
+        {% else %}
+            <a class="nav-link" href="{% url 'polls:sign_up'  %}">REGISTER</a>
+            <a class="nav-link" href="{% url 'polls:login_user'  %}">LOG IN</a>
+            <a class="nav-link" href="{% url 'blog:all_posts'  %}">ARTICLES</a>
+        {% endif %}
+        <form action="{% url 'polls:search' %}" method="get" class="pt-1" style="position:absolute;right:5px;">
+            <span>
+                <label for="cars"></label>
+                <select name="option" id="cars">
+                    <option value="Question">Questions</option>
+                    <option value="User">Users</option>
+                </select>
+                <input  style="border-width: medium;border-style: solid;border-radius: 10px;" type="text" name="q" placeholder="search" id="searchbar" required>
+                <button id="searchbutton" type="submit" class="btn btn-primary">Search</button>
+            </span>
+        </form>
+    </nav>
+    </div>
+    {% comment %}
+    {% if request.user.is_authenticated %}
+    <span style="padding: 10px;font-family:Tahoma"><em>Hello {{ request.user.first_name }} </em> </span>
+    {% endif %}
+    {% endcomment %}
+  
+<script>
+</script>
+        
+    {% if messages %} 
+    {% for message in messages %}
+
+        <p>{{ message }}</p>
+
+    {% endfor %}
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>
+
+
+<script>
+    
+        
+
+    {% if not request.user.notification.chat_flag %}
+
+    $(document).ready( function () {
+        setInterval(function() {
+      
+        $.ajax({
+            type:'GET',
+            url: "{% url 'polls:chat_notify' %}",
+            success: function(response) {
+                if (response.notify) {
+                    $("#chatnotify").html("Chats<i class='fa-solid fa-envelope' id='badge'></i>");
+                    console.log("print me");
+                } else {
+                    $("#chatnotify").text("Chats");
+                }
+            },
+            error: function(response) {
+                console.log("Error Getting Data");
+            }
+        });
+        }, 5000);
+
+    });
+
+    {% endif %}
+
+
+    $(document).ready( function () {
+    setInterval(function() {
+        $.ajax({
+        type:'GET',
+        url: "{% url 'polls:check_profile_flag' %}",
+        success: function(response) {
+            
+            if (response.notify) {
+                $("#profile_notif").html("PROFILE<i class='fa-solid fa-comment'></i>");
+
+            } else {
+                $("#profile_notif").text("PROFILE");
+            }
+        },
+        error: function(response) {
+            console.log("Error Getting Data");
+        }
+    });
+    }, 17000);
+});
+
+{% if not request.user.notification.request_flag %}
+
+$(document).ready( function () {
+        setInterval(function() {
+        console.log("t1");
+        $.ajax({
+            type:'GET',
+            url: "{% url 'polls:friend_notify' %}",
+            success: function(response) {
+                console.log(typeof response.notify);
+                console.log("tesss");
+                if (response.notify) {
+                    $("#friend_notify").html("Friends<i class='fa-solid fa-envelope' id='badge'></i>");
+                    console.log("print me");
+                } else {
+                    $("#friend_notify").text("Friends");
+                }
+            },
+            error: function(response) {
+                console.log("Error Getting Data");
+            }
+        });
+        }, 19000);
+
+    });
+{% endif %}
+</script>
+
+
+{% comment %}
+$(document).ready( function () {
+    setInterval(function() {
+        $.ajax({
+        type:'GET',
+        url: "{% url 'polls:check_profile_flag' %}",
+        success: function(response) {
+            
+            if (response.notify) {
+                $("#profile_notif").html("Profile<i class='fa-solid fa-envelope' id='badge'></i>");
+
+            } else {
+                $("#profile_notif").text("Profile");
+            }
+        },
+        error: function(response) {
+            console.log("Error Getting Data");
+        }
+    });
+    }, 17000);
+});
+
+{% endcomment %}
+
+

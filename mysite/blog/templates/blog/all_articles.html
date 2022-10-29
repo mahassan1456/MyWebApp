@@ -1,0 +1,40 @@
+{% extends 'polls/base.html' %} 
+
+
+
+{% block content %} 
+<button class="btn btn-primary" style="position:absolute;left:15px;top:50px;"> <a class="text-white" href="{% url 'blog:make_post' %}">Create Article </a> </button>
+<br>
+<br>
+{% for obj in article_list %}
+
+<div class="card m-2">
+
+    <div class="card-body">
+        <h5 class="card-title"> {{ obj.title }}</h5>
+        <img class="card-img-top my-3" src="{{ MEDIA_URL }}{{obj.image}}" height="250" width="500" alt="Card image cap">
+        <h6 class="card-subtitle mb-2 text-muted"> {{ obj.author.username }} on {{ obj.created }}</h6>
+        <p class="card-text">{{ obj.content }}</p>
+        <a href="{% url 'blog:article' obj.id obj.slug %}">Comment</a>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+{% if page_obj.has_previous %}
+
+<a style="position:relative;left:5px;" class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}"> Prev </a>
+
+
+{% endif %}
+
+{% if page_obj.has_next %}
+
+<a style="position:relative;left:20px;"class="btn btn-primary" href="?page={{ page_obj.next_page_number }}"> Next </a>
+
+{% endif %}
+
+
+{% endblock %}

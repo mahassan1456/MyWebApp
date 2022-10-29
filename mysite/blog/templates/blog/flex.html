@@ -1,0 +1,74 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/blogstyles.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container" id="t1">
+        <p id="A">A</p>
+        <p id="B">B</p>
+        <p id="C">C</p>
+        <p id="D">D</p>
+
+    </div>
+    <ol id="olist">
+
+    </ol>
+    <input type="text" id="inp">
+    <button onclick="addItem()">Add Item</button>
+    <button onclick="removeItem()">Remove Item</button>
+
+
+
+    
+    <div id="choiceselect">
+        <input type="text" id="inp1">
+    </div>
+    <button onclick="addItem1()">Add Choice</button>
+    <input type="submit" value="test">
+
+
+      
+<script>
+    function addItem1() {
+        ol = document.getElementById("choiceselect")
+        p = document.createElement('p')
+        inp = document.getElementById('inp1')
+        p.textContent = inp.value
+        input = document.createElement('input')
+        input.setAttribute('type','text')
+        ol.appendChild(p)
+        ol.appendChild(input)
+    }
+</script>
+
+<script>
+    function addItem() {
+        ol = document.getElementById("olist")
+        li = document.createElement('input')
+        input = document.getElementById('inp')
+        li.setAttribute('id', input.value)
+        li.setAttribute('type','text')
+        li.value= input.value
+        ol.appendChild(li)
+    }
+
+    function removeItem() {
+        ol = document.getElementById("olist")
+        input = document.getElementById('inp')
+        remove = document.getElementById(input.value)
+        ol.removeChild(remove)
+    }
+</script>
+
+   
+    
+</body>
+</html>

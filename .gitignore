@@ -1,0 +1,6 @@
+# Ignore the Following Files when updating repositories.
+mysite/en.sh
+mysite/testing.py
+mysite/start.sh
+mysite/imports.py
+mysite/mysite/secrets.py

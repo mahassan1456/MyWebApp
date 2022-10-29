@@ -1,0 +1,38 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+
+
+<ul id="display">
+
+</ul>
+
+<script>
+    $(document).ready( function () {
+
+        setInterval(function() {
+        $.ajax({
+            type:'GET',
+            url: "{% url 'polls:getuser' %}",
+            success: function(response) {
+                $("#display").empty();
+                for (var user in response.users) {
+                    var temp = "<li>"+response.users[user].username+"</li>";
+                    console.log(temp);
+                    console.log(user)
+                    $("#display").append(temp);
+
+                }
+            },
+            error: function(response) {
+                alert("Error Getting Data")
+            }
+        });
+        }, 1000);
+
+    });
+</script>
+
+
+
+{% endblock %}

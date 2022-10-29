@@ -1,0 +1,263 @@
+{% extends 'polls/base.html' %}
+{% load polls_extras %}
+
+{% block styles %}
+{{ block.super }}
+<style>
+
+.poppin {
+    cursor: pointer;
+}
+#layover {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: #999;
+    width: 100%;
+    height: 100%;
+    opacity: 0.69;
+    z-index: 100;
+}
+
+#popups {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: #fff;
+    width: 500px;
+    height: 500px;
+    margin-left: -250px; /*Half the value of width to center div*/
+    margin-top: -250px; /*Half the value of height to center div*/
+    z-index: 200;
+    border-radius: 10px;
+   
+}
+#close  {
+    float: right;
+}
+.scroll {
+    display: block;
+    border: 0px solid red;
+    padding: 5px;
+    margin-top: 5px;
+    width: 100%;
+    height: 100px;
+    overflow-y: scroll;
+}
+
+#windowpane {
+width: 90%;
+height: 75%;
+overflow-y: scroll;
+border-radius: 12px;
+}
+div.design {
+    display: none;
+}
+
+#messagebox {
+    border-radius: 18px;
+}
+
+.unborn {
+    float: right;
+    padding: 10px;
+    background-color:lightgreen;
+    position: relative;
+    top: 10px;
+    border-radius: 10px;
+}
+
+#from {
+    background-color: green;
+}
+
+#to {
+    background-color: coral;
+}
+
+</style>
+
+{% endblock styles %}
+
+{% block content %}
+<div>
+    <div id="layover">
+        <p></p>
+    </div>
+    <div id="popups">
+        <div style="border-style:dotted;">
+            <H4 style="display:inline;">Chat </H4>
+            <button style="bottom: 1-px;" id="close"> --- </button>
+        </div>
+        <div style="border-style: double;margin:20px 0px 10px 25px;padding:5px 0px 0px 5px;" id="windowpane">
+            <span style="border-radius:10px;background-color:coral;padding: 5px;" id="info">Does This Work??</span>
+        </div>
+        <form style="position:relative;left:21px;padding-left: 5px;padding-top: 5px;" action="" method="post">
+            {% csrf_token %}
+            <textarea style="overflow-y: scroll;" name="message" id="messagebox" cols="43" rows="1"></textarea>
+            
+        </form>
+    </div>
+</div>
+
+<h5>Friends</h5>
+
+<div style="display:flex">
+{% for request in request.user.user.friends.all %}
+
+<div>
+<span id="blur" style="display:inline-block;border-radius: 13px;border:3px dotted black;margin-right:5px;">
+<span class="poppin" id="popout{{forloop.counter}}" style="float: right; padding: 4px;">M</span>
+<img style="padding: 5px;border-radius: 13px;"src="{{MEDIA_URL}}{{request.profile.picture}}" alt="">
+<p style="padding: 5px;"><a href="{% url 'polls:view_profile' request.id %}"> {{ request.username }} </a>  <span> - </span><button style="border-radius: 13px;"><a style="text-decoration:none" href="{% url 'polls:remove_friend' request.id %}">  Unfriend </a></button>  </p>
+</span>
+{% comment %}
+<div>
+    <div class="design" id="layover{{forloop.counter}}">
+        <p></p>
+    </div>
+    <div class="design" id="popups{{forloop.counter}}">
+        <div style="border-style:dotted;">
+            <H4 style="display:inline;">Chat </H4>
+            <button style="bottom: 1-px;" id="close{{forloop.counter}}"> --- </button>
+        </div>
+        <div style="border-style: double;margin:10px 0px 0px 25px;padding:5px 0px 0px 5px;" id="windowpane">
+            <p id="info">Does This Work??</p>
+        </div>
+        <form style="padding-left: 5px;padding-top: 5px;" action="" method="post">
+            {% csrf_token %}
+            <textarea style="overflow-y: scroll;" name="message" id="messagebox" cols="30" rows="5"></textarea>
+            <input type="submit">
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+            var alarmc = null;
+            function myfunction(arg1) {
+            var url_c = "{% url 'polls:updatechat' request.user.id "+arg1+" %}"
+            $.ajax({
+                type:'GET',
+                url: url_c,
+                success: function(response) {
+                    $("#messages").empty();
+                    for (var key in response.chats) {
+                        if (response.current_u == response.chats[key].usermade) {
+                            var temp = "<p>"+response.chats[key].message+"--You"+"</p>";
+                            temp.setAttribute("id", "from");
+                        } else {
+                            var temp = "<p>"+response.chats[key].message+"--"+response.chats[key].usermade+"</p>";
+                            temp.setAttribute("id", "to");
+                        }
+                        console.log(Date.now());
+                        $("#messages").append(temp);
+    
+                    }
+                },
+                error: function(response) {
+                    console.log("Error Getting Data")
+                }
+            });
+           
+    
+       
+
+
+    var popupwindow = document.getElementById("popups");
+    var overlay = document.getElementById("layover");
+    var popupinner = document.getElementById("windowpane");
+    // var closed = document.getElementsByClassName("close");
+    var button = document.getElementById("popout{{forloop.counter}}")
+
+
+    // closed[0].onclick = function() {
+    //     overlay[0].style.display = 'none';
+    //     popupwindow[0].style.display = 'none';
+    // }
+
+    button.onclick = function() {
+        // console.log('{{request.user.email}}')
+        // var par = document.createElement("p");
+        // par.textContent = '{{request.user.email}}';
+        // popupwindow.appendChild(par);
+        overlay.style.display = 'block';
+        popupwindow.style.display = 'block';
+        var par = document.createElement("p");
+        par.classList.add("unborn")
+        par.textContent = "{{request.email}}cdsdc";
+        popupinner.appendChild(par);
+    var idd = "{{request.id}}"
+    var timer = setInterval(myfunction,5000,"{{request.id}}");
+    popupinner.setAttribute("data-val", timer);
+    }
+    
+
+</script>
+{% endcomment %}
+
+</div>
+{% endfor %}
+
+</div>
+
+<p></p>
+
+<h5>Received Requests</h5>
+{% for req in notify %}
+
+<p>{{ req.0.username }} <a href="{% url 'polls:accept_request' req.0.id %}" >  Accept Request </a></p>
+{% comment %}
+{% if req.1 %}
+<span><em>New Request</em>/span>
+{% endif %}
+{% endcomment %}
+
+{% endfor %}
+
+</span>
+
+<p></p>
+
+<h5>Sent Requests</h5>
+
+{% for req in request.user.user.sent_requests.all %}
+
+<p>{{ req.username }} <a href="{% url 'polls:cancel_request' req.id %}" >  Cancel Request </a> </p>
+
+{% endfor %}
+
+<p></p>
+<h5>Mutual Friends</h5>
+{% for friend in mutuals %}
+
+<p>You and <a href="{% url  'polls:view_profile' friend.1.id %}">{{ friend.1.username }}</a> are mutual friends with {{ friend.0.username }} </p>
+
+{% endfor %}
+{% for x in loop %}
+<p>{{ notify|indexed:forloop.counter0 }}</p>
+{% endfor %}
+
+ {% comment %}
+ # See why this is happening
+ <p>{{ req.0.username }} <a href="{% url 'polls:accept_request' req.id %}" >  Accept Request </a></p>
+ {% endcomment %}
+
+ <script type="text/javascript">
+    
+
+    document.getElementById("close").onclick = function() {
+        console.log("clicked just now")
+        document.getElementById("layover").style.display = 'none';
+        document.getElementById("popups").style.display = 'none';
+    }
+
+</script>
+
+
+{% endblock %} 
+

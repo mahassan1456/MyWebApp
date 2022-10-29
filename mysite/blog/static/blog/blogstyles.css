@@ -1,0 +1,48 @@
+body {
+
+    background-color: bisque;
+}
+
+.container {
+
+    display: flex;
+    justify-content:space-between;
+    background-color: whitesmoke;
+    
+    
+    
+}
+.container > p {
+    font-size: 50px;
+    
+}
+
+
+#A {
+    background-color: green;
+    order: 0;
+    flex-grow: 3;
+    flex-shrink: 3;
+    
+    
+}
+
+#B {
+    background-color: blue;
+    order: 1;
+    flex-grow: 1;
+    flex-shrink: 3;
+}
+
+#C {
+    background-color: darkkhaki;
+    flex-grow: 1;
+    flex-shrink: 3;
+}
+
+#D {
+    background-color: blueviolet;
+    flex-grow: 1;
+    flex-shrink: 3;
+}
+
