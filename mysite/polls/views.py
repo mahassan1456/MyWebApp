@@ -19,13 +19,10 @@ from django.db.models import Q
 from blog.models import Article
 from django.apps import apps
 from polls.helper_functions import key, check_flag_n_comment
-from django.core.mail import send_mail
-import polls.tasks
+
 
 ############################## SEND EMAIL #######################
-def send_email_p2p(request):
-    send_mail('Your Feedback',f"Thank you for your feedback {request.user.first_name}",
-    "specialreminder@gmail.com", ["jrhassan0731@gmail.com"],fail_silently=False)
+
 
 def test_popup(request):
     return render(request, 'polls/popup.html')
@@ -153,7 +150,6 @@ def login_user(request):
         url = request.GET.get('next', '')
         if user is not None:
             login(request, user)
-            polls.tasks.send_feedback_email_task.delay("mahassan1456@gmail.com", "Hello World")
             try:
                 notification = user.notification
             except Notification.DoesNotExist as error:
@@ -182,10 +178,6 @@ def logout_user(request):
     logout(request)
     return HttpResponseRedirect(reverse('polls:login_user'))
 
-def home(request):
-    polls.tasks.send_feedback_email_task.delay("mahassan1456@gmail.com", "Hello World")
-    
-    return render(request, 'polls/bs.html')
 
 def sign_up(request):
     if request.method == 'POST':

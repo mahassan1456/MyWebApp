@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
-from mysite.secrets import DB_PASS, DB_USER, DB_NAME
+from mysite.secrets import DB_PASS, DB_USER, DB_NAME,DB_HOST
 
 
 
@@ -31,13 +31,11 @@ SECRET_KEY = 'django-insecure-twh+4c!45g6b8+sc+%li%d25$ihkmp82nx(q)a01si%=m^b$#%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0','10.0.0.123', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / 'media'
 
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
 # Application definition
 
 INSTALLED_APPS = [
@@ -52,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'django_celery_beat',
+    
 ]
 
 MIDDLEWARE = [
@@ -92,23 +90,21 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3'
         'ENGINE' : 'django.db.backends.mysql',
         'NAME': DB_NAME,
-        # 'HOST': '127.0.0.1',
-        'HOST': 'localhost',
+        'HOST': DB_HOST,
         'USER': DB_USER,
         'PASSWORD': DB_PASS,
         'PORT': '3306'
     }
 }
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get("email")
-EMAIL_HOST_PASSWORD = os.environ.get("password")
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = os.environ.get("email")
+# EMAIL_HOST_PASSWORD = os.environ.get("password")
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
