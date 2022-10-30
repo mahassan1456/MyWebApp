@@ -34,7 +34,6 @@ urlpatterns = [
     path('chat_notify/', view=views.chat_notify, name="chat_notify"),
     path('friend_notify/', views.fr_request_notify, name="friend_notify"),
     path('profile_notify/<int:user_id>/', views.comment_notif, name="comment_notif"),
-    path('test_email/', views.send_email_p2p, name="send_mail"),
     path('check_profile/', views.check_profile_flag, name="check_profile_flag"),
     path('check_chats/<int:id>', views.clear_notifi, name='clear_notifi'),
     path('clear_chat_notif/', views.clear_chat_notify, name='clear_chat_notify'),

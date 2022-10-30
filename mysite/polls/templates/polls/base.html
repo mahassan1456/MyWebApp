@@ -124,7 +124,7 @@
     
         
 
-    {% if not request.user.notification.chat_flag %}
+    {% if not request.user.notification.chat_flag and request.user.is_authenticated %}
 
     $(document).ready( function () {
         setInterval(function() {
