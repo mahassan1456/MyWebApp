@@ -161,8 +161,10 @@ def forgot_password(request):
             payload = {
                 "id": requested_user.id,
                 "fir": requested_user.first_name,
-                "lst": requested_user.last_name
+                "lst": requested_user.last_name,
+                'exp': datetime.datetime.now() + datetime.timedelta(minutes=1)
             }
+
             token = jwt.encode(key=KEY,payload=payload)
             link = f'127.0.0.1/polls/newpassword/?token={token}&id={requested_user.id}'
             result = True
@@ -211,28 +213,35 @@ def newpassword(request):
     #verify if jwt is okay and also
     user = User.objects.get(id=request.GET.get('id'))
     token = request.GET.get('token','')
-    result = jwt.decode(key=KEY,jwt=token,algorithms=['HS256',])
     direct = 1
-    if result:
-        if request.method == 'POST':
-            password1 = request.POST.get('password1','')
-            password2 = request.POST.get('password2','')
-            if password1 == password2:
-                password = make_password(password=password1)
-                user.password = password
-                user.save()
-                messages.success("Email Successfully Sent")
-                
+    try:
+        result = jwt.decode(key=KEY,jwt=token,algorithms=['HS256',])
+    except:
+        messages.error(request,"Error Processing Link")
+        result = False
+    else:
+        if result['exp'] > datetime.datetime.now():
+            if request.method == 'POST':
+                password1 = request.POST.get('password1','')
+                password2 = request.POST.get('password2','')
+                if password1 == password2:
+                    password = make_password(password=password1)
+                    user.password = password
+                    user.save()
+                    messages.success(request,"Email Successfully Sent")
+                    
+                else:
+                    messages.error(request, "Passwords Do Not Match")
+                # return render(request, 'polls/newpassword.html',{'direct':direct})
             else:
-                messages.error("Passwords Do Not Match")
-            # return render(request, 'polls/newpassword.html',{'direct':direct})
+                messages.info(request, "Please enter new Password")
+                direct = 2
         else:
-            messages.info("Please enter new Password")
-            direct = 2
+            messages.error(request,"Expiration date has expired. Please re-enter email address")
+            return HttpResponseRedirect(redirect_to=reverse('polls:forgot_password'))
         #     return render(request, 'polls/newpassword.html', {'direct':direct})
         # return render(request, 'polls/newpassword.html')
-    else:
-        messages.error("Error Processing Link")
+    
     return render(request,'polls/newpassword.html',{'direct':direct,'result':result})
 
 def login_user(request):
