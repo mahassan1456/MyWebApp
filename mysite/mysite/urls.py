@@ -20,11 +20,13 @@ from django.http import HttpResponse
 # from polls.views import home
 from django.conf import settings
 from django.conf.urls.static import static
+from mysite import views
 
 
 
 
 urlpatterns = [
+    path('', views.home, name='home'),
     path('polls/', include('polls.urls')),
     path('blog/', include('blog.urls')),
     path('api/', include('api.urls')),

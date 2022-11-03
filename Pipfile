@@ -15,6 +15,10 @@ gunicorn = "*"
 celery = "*"
 redis = "*"
 django-celery-beat = "*"
+pyjwt = "*"
+cryptography = "*"
+python-jose = {extras = ["cryptography"], version = "*"}
+passlib = {extras = ["bcrypt"], version = "*"}
 
 [dev-packages]
 

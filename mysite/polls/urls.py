@@ -37,5 +37,10 @@ urlpatterns = [
     path('check_profile/', views.check_profile_flag, name="check_profile_flag"),
     path('check_chats/<int:id>', views.clear_notifi, name='clear_notifi'),
     path('clear_chat_notif/', views.clear_chat_notify, name='clear_chat_notify'),
-    path('popup/', views.test_popup, name='test_popup')
+    path('popup/', views.test_popup, name='test_popup'),
+    path('forgotpassword/', views.forgot_password, name='forgot_password'),
+    path('newpassword/', views.newpassword, name='newpassword')
 ]
+
+
+# /Users/nefarioussmalls/Django_Prod/django/mysite/polls/templates/polls/forgotpassword.html

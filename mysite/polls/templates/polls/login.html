@@ -6,7 +6,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
-
+<link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Tajawal&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Squada+One&display=swap" rel="stylesheet">
 <style>
     body {
         
@@ -26,7 +34,9 @@
         border-radius: 10px;
         border-style: solid;
         font-size: 25px;
-        font-family: 'Yanone Kaffeesatz', sans-serif;
+        /* font-family: 'Yanone Kaffeesatz', sans-serif; */
+        /* font-family: 'Nanum Gothic Coding', monospace; */
+        font-family: 'Squada One', cursive;
         
     }
     #logincont {
@@ -47,7 +57,9 @@
         /* font-family: 'Yanone Kaffeesatz', sans-serif; */
         color: rgb(63, 167, 150);
         font-size: 18px;
-        font-family: 'Roboto Mono', monospace;
+        /* font-family: 'Roboto Mono', monospace; */
+        font-family: 'Tajawal', sans-serif;
+        /* font-family: 'Nanum Gothic Coding', monospace; */
         
     }
     .dec {
@@ -85,6 +97,9 @@
                 <div>
                     <input type="checkbox" id="checkRemember">
                     <label for="checkRemember">Remember me</label>
+                </div>
+                <div>
+                    <a href="">Forgot Password?</a>
                 </div>
             </div>
             <div></div>
@@ -124,6 +139,9 @@
             <input type="checkbox" id="checkRemember">
             <em>
                 <label for="checkRemember">Remember me</label>
+            </em>
+            <em>
+                <a href="{% url 'polls:forgot_password' %}" style="text-decoration:none;">Forgot Password?</a>
             </em>
             <button id="signinbutton" style="background-color: rgb(63, 167, 150);color: whitesmoke;" type="submit">Sign in</button>
         </div>

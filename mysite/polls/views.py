@@ -1,3 +1,4 @@
+from calendar import c
 from tempfile import template
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from .models import Question, Choice, Profile, Circle, Comments, DM, DmThrough, Notification
@@ -19,10 +20,17 @@ from django.db.models import Q
 from blog.models import Article
 from django.apps import apps
 from polls.helper_functions import key, check_flag_n_comment
+from django.core.mail import send_mail
+import jwt
+import smtplib, ssl
+from email.message import EmailMessage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from django.contrib.auth.hashers import make_password, check_password
 
 
 ############################## SEND EMAIL #######################
-
+KEY = "This is my motherfucking secret key.43423r234r24r2wrw4r4tfrsfsdffgedg"
 
 def test_popup(request):
     return render(request, 'polls/popup.html')
@@ -139,7 +147,93 @@ def profile_settings(request):
 
 ############################## LOG IN/LOG OUT/ HOME ################################
 
+def forgot_password(request):
+    result = False
+    result1 = False
+    if request.method == 'POST':
+        email = request.POST.get('resetemail','')
+        try:
+            requested_user = User.objects.get(email=email)
+        except (User.DoesNotExist, KeyError) as e:
+            print(e)
+            result1 = True
+        else:
+            payload = {
+                "id": requested_user.id,
+                "fir": requested_user.first_name,
+                "lst": requested_user.last_name
+            }
+            token = jwt.encode(key=KEY,payload=payload)
+            link = f'127.0.0.1/polls/newpassword/?token={token}&id={requested_user.id}'
+            result = True
+            sender_email = 'accounts@randomthoughtz.com'
+            receiver_email  = requested_user.email
+            smtp_server = 'mail.privateemail.com'
+            port = 465
+            login = "accounts@randomthoughtz.com"
+            password = "Iverson01"
+            message = MIMEMultipart('alternative')
+            message["Subject"] = "Reset Your Password for RandomThoughtz.Com"
+            message["From"] = f"Accounts<{sender_email}>"
+            message["To"] = receiver_email
+            text = f"""\
+                    Please copy and paste the following link in your browser \n
+                    {link}
+                    """
+            html = """\
+                    <html>
+                    <head>
+                    </head>
+                    <body>
+                        <p>Hi, {title}<br>
+                        <br>
+                        Please Click the Link Below to securely reset your Password
+                        <a href="{link}">Reset Password</a> 
+                        </p>
+                    </body>
+                    </html>
+                    """.format(title=requested_user.first_name, link=link)
+            part1 = MIMEText(text, "plain")
+            part2 = MIMEText(html, "html")
+            message.attach(part1)
+            message.attach(part2)
+            context = ssl.create_default_context()
 
+            with smtplib.SMTP_SSL(smtp_server,port=port, context=context) as server:
+                server.login(sender_email, password)
+                server.sendmail(sender_email, receiver_email, message.as_string())
+
+        return render(request, 'polls/forgotpassword.html', context={'result':result,'result1':result1})
+
+    return render(request, 'polls/forgotpassword.html', context={'result':result,'result1':result1})
+
+def newpassword(request):
+    #verify if jwt is okay and also
+    user = User.objects.get(id=request.GET.get('id'))
+    token = request.GET.get('token','')
+    result = jwt.decode(key=KEY,jwt=token,algorithms=['HS256',])
+    direct = 1
+    if result:
+        if request.method == 'POST':
+            password1 = request.POST.get('password1','')
+            password2 = request.POST.get('password2','')
+            if password1 == password2:
+                password = make_password(password=password1)
+                user.password = password
+                user.save()
+                messages.success("Email Successfully Sent")
+                
+            else:
+                messages.error("Passwords Do Not Match")
+            # return render(request, 'polls/newpassword.html',{'direct':direct})
+        else:
+            messages.info("Please enter new Password")
+            direct = 2
+        #     return render(request, 'polls/newpassword.html', {'direct':direct})
+        # return render(request, 'polls/newpassword.html')
+    else:
+        messages.error("Error Processing Link")
+    return render(request,'polls/newpassword.html',{'direct':direct,'result':result})
 
 def login_user(request):
     if request.method == 'POST':
